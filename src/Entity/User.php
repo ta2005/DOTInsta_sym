@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
-#[ORM\DiscriminatorMap(['user' => User::class, 'admin' => Admin::class,'enseignant'=>Enseignant::class])]
+#[ORM\DiscriminatorMap(['user' => User::class, 'admin' => Admin::class,'enseignant'=>Enseignant::class, 'etudiant'=>Etudiant::class])]
 class User
 {
     #[ORM\Id]
