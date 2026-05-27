@@ -1,0 +1,19 @@
+this will be an incremental process
+
+this is what is will be dealing with first
+demande
+reclamation
+les entites:
+    etudiant
+    prof
+    admin
+
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    cin INT UNIQUE,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    mot_passe VARCHAR(255) NOT NULL
+);
