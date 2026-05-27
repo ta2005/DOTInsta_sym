@@ -35,7 +35,7 @@ class Demande
     private ?User $user_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'demandes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Admin $admin_id = null;
 
     public function getId(): ?int
