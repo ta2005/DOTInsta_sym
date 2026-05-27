@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Enum\RequeteEnum;
 use App\Entity\Demande;
 use App\Form\DemandeType;
 use App\Repository\DemandeRepository;
@@ -30,14 +31,17 @@ final class DemandeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $demande->setDateCreation(new DateTime());
+            $demande->setUserId($this->getUser());
+            $demande->setStatut(RequeteEnum::EN_ATTENTE);
             $entityManager->persist($demande);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_demande_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('demande/new.html.twig', [
-            'demande' => $demande,
+        return $this->render('demande/new_demande.html.twig', [
+            /* 'demande' => $demande, */
             'form' => $form,
         ]);
     }
