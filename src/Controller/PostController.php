@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/post')]
 final class PostController extends AbstractController
@@ -19,12 +20,13 @@ final class PostController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function index(PostRepository $postRepository): Response
     {
-        //this one i need to make it use the user id
-        //to check for post
-        //or even remove it
-        return $this->render('post/index.html.twig', [
-            'posts' => $postRepository->findAll(),
-        ]);
+        $user = $this->getUser();
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $posts = $postRepository->findAll();
+        } else {
+            $posts = $postRepository->findFeedForUser($user);
+        }
+        return $this->render('post/index.html.twig', ['posts' => $posts]);
     }
 
     #[Route('/new/groupe/{id}', name: 'app_post_new', methods: ['GET', 'POST'])]

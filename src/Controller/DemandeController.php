@@ -23,6 +23,7 @@ final class DemandeController extends AbstractController
 {
     #[IsGranted('ROLE_ADMIN')]
     #[Route(name: 'app_demande_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(DemandeRepository $demandeRepository): Response
     {
         return $this->render('demande/index.html.twig', [
@@ -61,7 +62,7 @@ final class DemandeController extends AbstractController
           $demande->setStatut(RequeteEnum::ACCEPTEE);
           $demande->setAdminId($this->getUser());
        }else if($status=="refusee"){
-          $demande->setStatus(RequeteEnum::REFUSEE);
+          $demande->setStatut(RequeteEnum::REFUSEE);
           $demande->setAdminId($this->getUser());
        }
        $em->flush();

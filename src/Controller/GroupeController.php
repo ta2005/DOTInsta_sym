@@ -13,6 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 //only an admin must have access to this route
 
+use App\Entity\User;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/groupe')]
 #[IsGranted('ROLE_ADMIN')]
 final class GroupeController extends AbstractController
@@ -90,7 +94,7 @@ final class GroupeController extends AbstractController
                         EntityManagerInterface $entityManager):Response{
         $membreGroupe  = new MembreGroupe();
         $membreGroupe->setDateAdhesion(new \DateTime());
-        $membreGroupe->setUser($user);
+        $membreGroupe->setUserId($user);
         $membreGroupe->setGroupeD($groupe);
         $entityManager->persist($membreGroupe);
         $entityManager->flush();
