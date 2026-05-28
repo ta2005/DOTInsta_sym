@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 //a normal user must have acces to create demande
 //and me/status
@@ -21,6 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DemandeController extends AbstractController
 {
     #[Route(name: 'app_demande_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(DemandeRepository $demandeRepository): Response
     {
         return $this->render('demande/index.html.twig', [
@@ -50,13 +52,14 @@ final class DemandeController extends AbstractController
             'form' => $form,
         ]);
     }
-    #[Route('/{id}/change/{status}',name:'change_status')]
+    #[Route('/{id}/change/{status}', name: 'change_status')]
+    #[IsGranted('ROLE_ADMIN')]
     public function changeSatus(Demande $demande,EntityManagerInterface $em,string $status="accepte"){
        if($status=="accepte"){
-          $demande->setStatus(RequeteEnum::ACCEPTEE);
+          $demande->setStatut(RequeteEnum::ACCEPTEE);
           $demande->setAdminId($this->getUser());
        }else if($status=="refusee"){
-          $demande->setStatus(RequeteEnum::REFUSEE);
+          $demande->setStatut(RequeteEnum::REFUSEE);
           $demande->setAdminId($this->getUser());
        }
        $em->flush();
@@ -65,6 +68,7 @@ final class DemandeController extends AbstractController
     }
 
     #[Route('/me/{statut}',name:'get_my_demande')]
+    #[IsGranted('ROLE_USER')]
     public function getMyDemande(EntityManagerInterface $em,?string $statut=null){
         if($statut==null){
             $crit = ["user_id" => $this->getUser()];
