@@ -8,16 +8,16 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Embeddable]
 class NiveauScolaire
 {
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable: true)]
     private ?string $classe = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $annee = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable: true)]
     private ?string $niveau = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable: true)]
     private ?string $fillier = null;
 
 

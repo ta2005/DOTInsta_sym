@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Admin;
 use App\Enum\RequeteEnum;
 use App\Entity\Demande;
 use App\Form\DemandeType;
@@ -57,29 +58,39 @@ final class DemandeController extends AbstractController
 
     #[Route('/{id}/change/{status}',name:'change_status')]
     #[IsGranted('ROLE_ADMIN')]
-    public function changeSatus(Demande $demande,EntityManagerInterface $em,string $status="accepte"){
-       if($status=="accepte"){
-          $demande->setStatut(RequeteEnum::ACCEPTEE);
-          $demande->setAdminId($this->getUser());
-       }else if($status=="refusee"){
-          $demande->setStatut(RequeteEnum::REFUSEE);
-          $demande->setAdminId($this->getUser());
-       }
-       $em->flush();
+    public function changeSatus(Demande $demande, EntityManagerInterface $em, string $status = "accepte"): Response
+    {
+        $user = $this->getUser();
+        if ($status === "accepte") {
+            $demande->setStatut(RequeteEnum::ACCEPTEE);
+            if ($user instanceof Admin) {
+                $demande->setAdminId($user);
+            }
+        } elseif ($status === "refusee") {
+            $demande->setStatut(RequeteEnum::REFUSEE);
+            if ($user instanceof Admin) {
+                $demande->setAdminId($user);
+            }
+        }
+        $em->flush();
 
-       return $this->redirectToRoute("app_demande_index");
+        return $this->redirectToRoute("app_demande_index");
     }
 
     #[Route('/me/{statut}',name:'get_my_demande')]
     #[IsGranted('ROLE_USER')]
-    public function getMyDemande(EntityManagerInterface $em,?string $statut=null){
-        if($statut==null){
-            $crit = ["user_id" => $this->getUser()];
-        }else{
-            $crit = ["user_id" => $this->getUser(),"statut"=>$statut];
+    public function getMyDemande(EntityManagerInterface $em, ?string $statut = null): Response
+    {
+        $crit = ["user_id" => $this->getUser()];
+        if ($statut !== null) {
+            $enumStatut = RequeteEnum::tryFrom($statut);
+            if ($enumStatut !== null) {
+                $crit["statut"] = $enumStatut;
+            }
         }
+
         return $this->render('demande/index.html.twig', [
-            'demandes' => $em->getRepository(Demande::class)->findBy($crit)
+            'demandes' => $em->getRepository(Demande::class)->findBy($crit),
         ]);
     }
 

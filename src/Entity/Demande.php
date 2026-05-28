@@ -34,7 +34,7 @@ class Demande
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'demandes')]
+    #[ORM\ManyToOne(inversedBy: 'demandeTraite')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Admin $admin_id = null;
 
