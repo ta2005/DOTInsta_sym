@@ -6,13 +6,16 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name:'app_user')]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap(['user' => User::class, 'admin' => Admin::class,'enseignant'=>Enseignant::class, 'etudiant'=>Etudiant::class])]
-class User
+class User implements UserInterface,PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -139,4 +142,28 @@ class User
 
         return $this;
     }
+
+    public function getUserIdentifier():string{
+        return $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = ['ROLE_USER']; // Everyone gets this
+
+        if ($this instanceof Admin) {
+            $roles[] = 'ROLE_ADMIN';
+        } elseif ($this instanceof Enseignant) {
+            $roles[] = 'ROLE_ENSEIGNANT';
+        } elseif ($this instanceof Etudiant) {
+            $roles[] = 'ROLE_ETUDIANT';
+        }
+
+        return array_unique($roles);
+    }
+
+    public function getPassword():?string{
+        return $this->mot_de_pass;
+    }
+
 }

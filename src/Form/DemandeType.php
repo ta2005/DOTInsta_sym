@@ -19,10 +19,9 @@ class DemandeType extends AbstractType
         $builder
             ->add('message')
             ->add('type',EnumType::class,[
-            'class'=>DemandeEnum::class,
-            'label'=>'Type de demande',
-            'placeholder'=>'Choisir un type'
-
+                'class'=>DemandeEnum::class,
+                'label'=>'Type de demande',
+                'placeholder'=>'Choisir un type'
             ]);
     }
 

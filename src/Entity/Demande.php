@@ -25,10 +25,10 @@ class Demande
     private ?\DateTime $date_creation = null;
 
     #[ORM\Column(length: 255,enumType:RequeteEnum::class)]
-    private ?string $statut = null;
+    private ?RequeteEnum $statut = null;
 
     #[ORM\Column(length: 255,enumType:DemandeEnum::class)]
-    private ?string $type = null;
+    private ?DemandeEnum $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'demandes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -67,24 +67,24 @@ class Demande
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?RequeteEnum
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(RequeteEnum $statut): static
     {
         $this->statut = $statut;
 
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): ?DemandeEnum
     {
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(DemandeEnum $type): static
     {
         $this->type = $type;
 
