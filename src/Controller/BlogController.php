@@ -16,7 +16,7 @@ final class BlogController extends AbstractController
    {
       $user = $this->getUser();
       if ($this->isGranted('ROLE_ADMIN')) {
-         $posts = $postRepository->findBy([], ['dateCreation' => 'DESC']);
+          $posts = $postRepository->findBy([], ['date_creation' => 'DESC']);
       }
       else {
          $posts = $postRepository->findFeedForUser($user);

@@ -1,26 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}My Blog Feed{% endblock %}
+{% block title %}Mon Flux - INSAT{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}"> {# Assuming recl-card is in styles or demands css #}
+    <style>
+        .page-content { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .recl-card { background: #1a1a1a; border: 1px solid #2e2e2e; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+        .recl-header { display: flex; justify-content: space-between; border-bottom: 1px solid #2e2e2e; padding-bottom: 12px; margin-bottom: 12px;}
+        .recl-student { font-weight: 600; color: #f0f0f0; }
+        .badge--group { background: rgba(74,222,128,.1); color: #4ade80; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; }
+        .recl-body p { color: #d0d0d0; line-height: 1.6; }
+        .post-actions { margin-top: 15px; display: flex; gap: 10px; }
+        .btn-comment { background: #2a2a2a; color: #fff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.9rem;}
+        .btn-comment:hover { background: #3a3a3a; }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>My Feed</h1>
+<div class="page-content">
 
-    <a href="{{ path('app_groupe_index') }}">Browse all Groups</a>
-
-    <hr>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1 style="color: white;"><i class="ti ti-activity"></i> Mon Flux</h1>
+        <a href="{{ path('app_groupe_index') }}" class="btn-comment" style="background: #3b5a80;">Parcourir les Groupes</a>
+    </div>
 
     {% for post in posts %}
-        <div style="border: 1px solid #ccc; margin-bottom: 15px; padding: 10px;">
-            <small>
-                Group: <strong>{{ post.groupId.nom }}</strong> |
-                Author: {{ post.auteurId.nom }} {{ post.auteurId.prenom }}
-            </small>
+        <div class="card recl-card">
+            <div class="recl-header">
+                <div class="recl-meta">
+                    <i class="ti ti-user" style="color: #888;"></i>
+                    <span class="recl-student">{{ post.auteurId.prenom }} {{ post.auteurId.nom }}</span>
+                    <small style="color: #888; margin-left: 10px;">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
+                </div>
+                <span class="badge badge--group">
+                    <i class="ti ti-users-group"></i> {{ post.groupId.nom }}
+                </span>
+            </div>
 
-            <p>{{ post.contenu }}</p>
+            <div class="recl-body">
+                <p>{{ post.contenu }}</p>
 
-            <a href="{{ path('app_post_show', {'id': post.id}) }}">Read more / Comment</a>
+                <div class="post-actions">
+                    <a href="{{ path('app_post_show', {'id': post.id}) }}" class="btn-comment">
+                        <i class="ti ti-messages"></i> Voir les commentaires
+                    </a>
+                    {% if app.user == post.auteurId %}
+                        <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn-comment" style="background: transparent; border: 1px solid #3a3a3a;">Modifier</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     {% else %}
-        <p>Your feed is empty! Go join some groups.</p>
+        <div class="empty-state" style="text-align: center; padding: 50px; background: #1a1a1a; border-radius: 12px; border: 1px dashed #3a3a3a;">
+            <i class="ti ti-ghost" style="font-size: 40px; color: #555;"></i>
+            <p style="color: #888; margin-top: 10px;">Votre flux est vide. Rejoignez des groupes pour voir des publications !</p>
+        </div>
     {% endfor %}
+
+</div>
 {% endblock %}
