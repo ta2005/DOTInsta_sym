@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Blog Feed{% endblock %}
+
+{% block body %}
+    <h1>My Feed</h1>
+
+    <a href="{{ path('app_groupe_index') }}">Browse all Groups</a>
+
+    <hr>
+
+    {% for post in posts %}
+        <div style="border: 1px solid #ccc; margin-bottom: 15px; padding: 10px;">
+            <small>
+                Group: <strong>{{ post.groupId.nom }}</strong> |
+                Author: {{ post.auteurId.nom }} {{ post.auteurId.prenom }}
+            </small>
+
+            <p>{{ post.contenu }}</p>
+
+            <a href="{{ path('app_post_show', {'id': post.id}) }}">Read more / Comment</a>
+        </div>
+    {% else %}
+        <p>Your feed is empty! Go join some groups.</p>
+    {% endfor %}
+{% endblock %}

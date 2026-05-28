@@ -43,9 +43,23 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Demande::class, mappedBy: 'user_id', orphanRemoval: true)]
     private Collection $demandes;
 
+    /**
+     * @var Collection<int, Post>
+     */
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'auteur_id', orphanRemoval: true)]
+    private Collection $postsCree;
+
+    /**
+     * @var Collection<int, MembreGroupe>
+     */
+    #[ORM\OneToMany(targetEntity: MembreGroupe::class, mappedBy: 'user_id', orphanRemoval: true)]
+    private Collection $yes;
+
     public function __construct()
     {
         $this->demandes = new ArrayCollection();
+        $this->postsCree = new ArrayCollection();
+        $this->yes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +178,66 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
 
     public function getPassword():?string{
         return $this->mot_de_pass;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPostsCree(): Collection
+    {
+        return $this->postsCree;
+    }
+
+    public function addPostsCree(Post $postsCree): static
+    {
+        if (!$this->postsCree->contains($postsCree)) {
+            $this->postsCree->add($postsCree);
+            $postsCree->setAuteurId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostsCree(Post $postsCree): static
+    {
+        if ($this->postsCree->removeElement($postsCree)) {
+            // set the owning side to null (unless already changed)
+            if ($postsCree->getAuteurId() === $this) {
+                $postsCree->setAuteurId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MembreGroupe>
+     */
+    public function getYes(): Collection
+    {
+        return $this->yes;
+    }
+
+    public function addYe(MembreGroupe $ye): static
+    {
+        if (!$this->yes->contains($ye)) {
+            $this->yes->add($ye);
+            $ye->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeYe(MembreGroupe $ye): static
+    {
+        if ($this->yes->removeElement($ye)) {
+            // set the owning side to null (unless already changed)
+            if ($ye->getUserId() === $this) {
+                $ye->setUserId(null);
+            }
+        }
+
+        return $this;
     }
 
 }

@@ -12,6 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+//a normal user must have acces to create demande
+//and me/status
+//i need to make the app_demande_index route for the admin to filter demande
+//based on type whether they concern(he changed their status) him or not
+
 #[Route('/demande')]
 final class DemandeController extends AbstractController
 {
@@ -57,7 +62,6 @@ final class DemandeController extends AbstractController
        $em->flush();
 
        return $this->redirectToRoute("app_demande_index");
-
     }
 
     #[Route('/me/{statut}',name:'get_my_demande')]
@@ -70,7 +74,6 @@ final class DemandeController extends AbstractController
         return $this->render('demande/index.html.twig', [
         'demandes' => $em->getRepository(Demande::class)->findBy($crit)
         ]);
-
     }
 
     #[Route('/{id}', name: 'app_demande_show', methods: ['GET'])]
