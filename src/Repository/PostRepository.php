@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -18,11 +19,10 @@ class PostRepository extends ServiceEntityRepository
     public function findFeedForUser(User $user): array
     {
         return $this->createQueryBuilder('p')
-        ->join('p.group_id', 'g') // Join the Group
-        ->join('g.membreGroupes', 'm') // Join the Members of that Group
-        ->where('m.user_id = :user') // Filter by the current user
+        ->join(\App\Entity\MembreGroupe::class, 'm', 'WITH', 'm.groupe_d = p.group_id')
+        ->where('m.user_id = :user')
         ->setParameter('user', $user)
-        ->orderBy('p.dateCreation', 'DESC') // Newest posts first!
+        ->orderBy('p.date_creation', 'DESC')
         ->getQuery()
         ->getResult();
     }
