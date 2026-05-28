@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 //a normal user must have acces to create demande
 //and me/status
@@ -20,6 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/demande')]
 final class DemandeController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route(name: 'app_demande_index', methods: ['GET'])]
     public function index(DemandeRepository $demandeRepository): Response
     {
@@ -29,6 +31,7 @@ final class DemandeController extends AbstractController
     }
 
     #[Route('/new', name: 'app_demande_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $demande = new Demande();
@@ -50,10 +53,12 @@ final class DemandeController extends AbstractController
             'form' => $form,
         ]);
     }
+
     #[Route('/{id}/change/{status}',name:'change_status')]
+    #[IsGranted('ROLE_ADMIN')]
     public function changeSatus(Demande $demande,EntityManagerInterface $em,string $status="accepte"){
        if($status=="accepte"){
-          $demande->setStatus(RequeteEnum::ACCEPTEE);
+          $demande->setStatut(RequeteEnum::ACCEPTEE);
           $demande->setAdminId($this->getUser());
        }else if($status=="refusee"){
           $demande->setStatus(RequeteEnum::REFUSEE);
@@ -65,6 +70,7 @@ final class DemandeController extends AbstractController
     }
 
     #[Route('/me/{statut}',name:'get_my_demande')]
+    #[IsGranted('ROLE_USER')]
     public function getMyDemande(EntityManagerInterface $em,?string $statut=null){
         if($statut==null){
             $crit = ["user_id" => $this->getUser()];
@@ -72,11 +78,12 @@ final class DemandeController extends AbstractController
             $crit = ["user_id" => $this->getUser(),"statut"=>$statut];
         }
         return $this->render('demande/index.html.twig', [
-        'demandes' => $em->getRepository(Demande::class)->findBy($crit)
+            'demandes' => $em->getRepository(Demande::class)->findBy($crit)
         ]);
     }
 
     #[Route('/{id}', name: 'app_demande_show', methods: ['GET'])]
+    #[IsGranted('DEMANDE_VIEW', subject: 'demande')]
     public function show(Demande $demande): Response
     {
        return $this->render('demande/show.html.twig', [
@@ -85,6 +92,7 @@ final class DemandeController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_demande_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('DEMANDE_EDIT', subject: 'demande')]
     public function edit(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
     {
        $form = $this->createForm(DemandeType::class, $demande);
@@ -103,6 +111,7 @@ final class DemandeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_demande_delete', methods: ['POST'])]
+    #[IsGranted('DEMANDE_DELETE', subject: 'demande')]
     public function delete(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
     {
        if ($this->isCsrfTokenValid('delete'.$demande->getId(), $request->getPayload()->getString('_token'))) {
@@ -112,4 +121,4 @@ final class DemandeController extends AbstractController
 
        return $this->redirectToRoute('app_demande_index', [], Response::HTTP_SEE_OTHER);
     }
- }
+}
