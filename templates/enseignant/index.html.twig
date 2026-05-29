@@ -1,43 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Enseignant index{% endblock %}
+{% block title %}Gérer les Enseignants{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Enseignant index</h1>
+<div class="etu-page">
+    <div class="etu-header">
+        <h1 class="etu-header-title">Liste des Enseignants</h1>
+        <a href="{{ path('app_enseignant_new') }}" class="etu-btn-primary">Ajouter un enseignant</a>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Cin</th>
-                <th>Nom</th>
-                <th>Prenom</th>
-                <th>Email</th>
-                <th>Mot_de_pass</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for enseignant in enseignants %}
-            <tr>
-                <td>{{ enseignant.id }}</td>
-                <td>{{ enseignant.cin }}</td>
-                <td>{{ enseignant.nom }}</td>
-                <td>{{ enseignant.prenom }}</td>
-                <td>{{ enseignant.email }}</td>
-                <td>{{ enseignant.motDePass }}</td>
-                <td>
-                    <a href="{{ path('app_enseignant_show', {'id': enseignant.id}) }}">show</a>
-                    <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_enseignant_new') }}">Create new</a>
+    <div class="etu-table-wrap">
+        <table class="etu-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CIN</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for enseignant in enseignants %}
+                <tr>
+                    <td>{{ enseignant.id }}</td>
+                    <td>{{ enseignant.cin }}</td>
+                    <td>{{ enseignant.nom }}</td>
+                    <td>{{ enseignant.prenom }}</td>
+                    <td>{{ enseignant.email }}</td>
+                    <td class="etu-td-actions">
+                        <a href="{{ path('app_enseignant_show', {'id': enseignant.id}) }}" class="etu-btn-icon" title="Voir"><i class="ti ti-eye"></i></a>
+                        <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="etu-btn-icon" title="Modifier"><i class="ti ti-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px;">Aucun enseignant trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

@@ -1,41 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Demande index{% endblock %}
+{% block title %}Toutes les Demandes{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Demande index</h1>
+<div class="etu-page">
+    <div class="etu-header">
+        <h1 class="etu-header-title">Administration des Demandes</h1>
+        <a href="{{ path('app_demande_new') }}" class="etu-btn-primary">Nouvelle demande</a>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Message</th>
-                <th>Date_creation</th>
-                <th>Statut</th>
-                <th>Type</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for demande in demandes %}
-            <tr>
-                <td>{{ demande.id }}</td>
-                <td>{{ demande.message }}</td>
-                <td>{{ demande.dateCreation ? demande.dateCreation|date('Y-m-d') : '' }}</td>
-                <td>{{ demande.statut.value }}</td>
-                <td>{{ demande.type.value }}</td>
-                <td>
-                    <a href="{{ path('app_demande_show', {'id': demande.id}) }}">show</a>
-                    <a href="{{ path('app_demande_edit', {'id': demande.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_demande_new') }}">Create new</a>
+    <div class="etu-table-wrap">
+        <table class="etu-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Message</th>
+                    <th>Date Création</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for demande in demandes %}
+                <tr>
+                    <td>{{ demande.id }}</td>
+                    <td><span class="etu-badge">{{ demande.type.value|default(demande.type) }}</span></td>
+                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ demande.message }}</td>
+                    <td>{{ demande.dateCreation ? demande.dateCreation|date('d/m/Y') : '' }}</td>
+                    <td>
+                        <span style="font-weight: bold; color: {% if demande.statut.value == 'EN_ATTENTE' %}#f59e0b{% elseif demande.statut.value == 'ACCEPTEE' %}#10b981{% else %}#ef4444{% endif %};">
+                            {{ demande.statut.value|default(demande.statut) }}
+                        </span>
+                    </td>
+                    <td class="etu-td-actions">
+                        <a href="{{ path('app_demande_show', {'id': demande.id}) }}" class="etu-btn-icon" title="Voir"><i class="ti ti-eye"></i></a>
+                        <a href="{{ path('app_demande_edit', {'id': demande.id}) }}" class="etu-btn-icon" title="Modifier"><i class="ti ti-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px;">Aucune demande trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
