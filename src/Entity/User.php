@@ -176,6 +176,12 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
     public function getPassword():?string{
         return $this->mot_de_pass;
     }

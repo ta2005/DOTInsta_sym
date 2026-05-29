@@ -32,9 +32,12 @@
                             <div class="etu-avatar"><i class="ti ti-user"></i></div>
                             {{ user.prenom }} {{ user.nom }}
                         </span>
-                        <a href="{{ path('app_ajouter_user_groupe', {'id': groupe.id, 'userId': user.id}) }}" class="etu-btn-primary" style="padding: 6px 12px; font-size: 0.8rem; text-decoration: none;">
-                            <i class="ti ti-plus"></i> Ajouter
-                        </a>
+                        <form method="post" action="{{ path('app_ajouter_user_groupe', {'id': groupe.id, 'userId': user.id}) }}" style="margin: 0;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('join' ~ groupe.id) }}">
+                            <button type="submit" class="etu-btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="ti ti-plus"></i> Ajouter
+                            </button>
+                        </form>
                     </li>
                 {% else %}
                     <li style="padding: 20px; text-align: center; color: var(--text-muted);">

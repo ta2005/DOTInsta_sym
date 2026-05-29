@@ -21,7 +21,7 @@ class MembreGroupe
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'membreGroupes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Groupe $groupe_d = null;
 

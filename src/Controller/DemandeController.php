@@ -22,7 +22,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class DemandeController extends AbstractController
 {
     #[Route(name: 'app_demande_index', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function index(DemandeRepository $demandeRepository): Response
     {
         return $this->render('demande/index.html.twig', [
@@ -45,7 +44,7 @@ final class DemandeController extends AbstractController
             $entityManager->persist($demande);
             $entityManager->flush();
 
-            return $this->redirectToRoute('get_my_demande', ['status'=>null], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('get_my_demande', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('demande/new_demande.html.twig', [
@@ -54,9 +53,12 @@ final class DemandeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/change/{status}',name:'change_status')]
+    #[Route('/{id}/change/{status}',name:'change_status', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function changeSatus(Demande $demande,EntityManagerInterface $em,string $status="accepte"){
+    public function changeStatus(Request $request, Demande $demande,EntityManagerInterface $em,string $status="accepte"){
+        if (!$this->isCsrfTokenValid('change'.$demande->getId(), $request->getPayload()->getString('_token'))) {
+            return $this->redirectToRoute("app_demande_index");
+        }
         if($status=="accepte"){
             $demande->setStatut(RequeteEnum::ACCEPTEE);
         }else if($status=="refusee"){

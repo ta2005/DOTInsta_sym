@@ -63,7 +63,6 @@ final class CommentaireVoter extends Voter
                 // logic to determine if the user can EDIT
                 // return true or false
                 return $comm->getAuteurId() === $user;
-                break;
 
             //for both of these the user must be part of the groupe
             case self::VIEW:

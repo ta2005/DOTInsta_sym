@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[IsGranted('ROLE_ADMIN')]
 #[Route('/enseignant')]
@@ -25,16 +26,17 @@ final class EnseignantController extends AbstractController
     }
 
     #[Route('/new', name: 'app_enseignant_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $enseignant = new Enseignant();
         $form = $this->createForm(EnseignantType::class, $enseignant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $enseignant->setMotDePass(
-                $hasher->hashPassword($enseignant,$user->getMotDePass())
-            );
+            if ($enseignant->getMotDePass()) {
+                $hashedPassword = $passwordHasher->hashPassword($enseignant, $enseignant->getMotDePass());
+                $enseignant->setMotDePass($hashedPassword);
+            }
             $entityManager->persist($enseignant);
             $entityManager->flush();
 
@@ -56,12 +58,16 @@ final class EnseignantController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_enseignant_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Enseignant $enseignant, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Enseignant $enseignant, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $form = $this->createForm(EnseignantType::class, $enseignant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('mot_de_pass')->getData()) {
+                $hashedPassword = $passwordHasher->hashPassword($enseignant, $form->get('mot_de_pass')->getData());
+                $enseignant->setMotDePass($hashedPassword);
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_enseignant_index', [], Response::HTTP_SEE_OTHER);

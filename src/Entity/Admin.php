@@ -28,6 +28,7 @@ class Admin extends User
 
     public function __construct()
     {
+        parent::__construct();
         $this->demandeTraite = new ArrayCollection();
         $this->groupeGere = new ArrayCollection();
     }

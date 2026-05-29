@@ -5,4 +5,3 @@
         case ACCEPTEE='ACCEPTEE';
         case REFUSEE='REFUSEE';
     }
-?>

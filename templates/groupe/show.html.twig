@@ -46,9 +46,10 @@
                                 Admis le {{ membership.dateAdhesion|date('d/m/Y') }}
                             </span>
                             {% if is_granted('ROLE_ADMIN') %}
-                                <a href="{{ path('app_retirer_user_groupe', {'id': groupe.id, 'userId': membership.userId.id}) }}" class="etu-btn-icon" style="color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);" title="Retirer du groupe">
-                                    <i class="ti ti-user-minus"></i>
-                                </a>
+                                <form method="post" action="{{ path('app_retirer_user_groupe', {'id': groupe.id, 'userId': membership.userId.id}) }}" style="margin: 0; display: inline-block;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ groupe.id) }}">
+                                    <button type="submit" class="etu-btn-icon" style="color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); background: transparent; cursor: pointer;" title="Retirer du groupe"><i class="ti ti-user-minus"></i></button>
+                                </form>
                             {% endif %}
                         </span>
                     </li>

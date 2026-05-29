@@ -7,4 +7,3 @@
         case FEUILLES_DE_NOTES='FEUILLES_DE_NOTES';
         case AUTRES='AUTRES';
     }
-?>

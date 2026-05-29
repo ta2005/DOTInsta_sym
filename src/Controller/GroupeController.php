@@ -93,11 +93,14 @@ final class GroupeController extends AbstractController
         return $this->redirectToRoute('app_groupe_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('{id}/add-user/{userId}',name: 'app_ajouter_user_groupe')]
+    #[Route('{id}/add-user/{userId}',name: 'app_ajouter_user_groupe', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function join(Groupe $groupe,
+    public function join(Request $request, Groupe $groupe,
                         #[MapEntity(id: 'userId')] User $user,
                         EntityManagerInterface $entityManager):Response{
+        if (!$this->isCsrfTokenValid('join'.$groupe->getId(), $request->getPayload()->getString('_token'))) {
+            return $this->redirectToRoute('app_groupe_show', ['id' => $groupe->getId()], Response::HTTP_SEE_OTHER);
+        }
         $membreGroupe  = new MembreGroupe();
         $membreGroupe->setDateAdhesion(new \DateTime());
         $membreGroupe->setUserId($user);
@@ -133,12 +136,15 @@ final class GroupeController extends AbstractController
         ]);
     }
 
-    #[Route('{id}/remove-user/{userId}',name: 'app_retirer_user_groupe')]
+    #[Route('{id}/remove-user/{userId}',name: 'app_retirer_user_groupe', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function removeUser(Groupe $groupe,
+    public function removeUser(Request $request, Groupe $groupe,
                         #[MapEntity(id: 'userId')] User $user,
                         EntityManagerInterface $entityManager,
                         \App\Repository\MembreGroupeRepository $membreGroupeRepository):Response{
+        if (!$this->isCsrfTokenValid('remove'.$groupe->getId(), $request->getPayload()->getString('_token'))) {
+            return $this->redirectToRoute('app_groupe_show', ['id' => $groupe->getId()], Response::HTTP_SEE_OTHER);
+        }
         $membership = $membreGroupeRepository->findOneBy(['groupe_d' => $groupe, 'user_id' => $user]);
         if ($membership) {
             $entityManager->remove($membership);

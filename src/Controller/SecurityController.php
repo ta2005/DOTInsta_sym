@@ -28,6 +28,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/setup-admin', name: 'setup_admin')]
+    #[IsGranted('ROLE_ADMIN')]
     public function setupAdmin(EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
     {
         $admin = new \App\Entity\Admin();
@@ -46,6 +47,7 @@ class SecurityController extends AbstractController
         return new Response('Admin created! You can now login at /login with admin@test.com / admin123');
     }
     #[Route('/generate-test-data', name: 'app_generate_test_data')]
+    #[IsGranted('ROLE_ADMIN')]
     public function generateTestData(\Doctrine\ORM\EntityManagerInterface $em, \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface $hasher): \Symfony\Component\HttpFoundation\Response
     {
         // 1. Create Admin
