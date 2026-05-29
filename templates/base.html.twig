@@ -1,24 +1,51 @@
+{# templates/base.html.twig #}
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-
-        {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphpHotReload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
+        <title>{% block title %}INSAT Portal{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+        {% block stylesheets %}{% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="bg">
+        <nav class="topbar" style="display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 70px; background: #111; border-bottom: 1px solid #2e2e2e; position: sticky; top: 0; z-index: 1000;">
+            <div class="brand">
+                <a href="{{ path('app_post_index') }}">
+                    <img src="{{ asset('resources/logo.svg') }}" alt="INSAT" style="height: 30px;">
+                </a>
+            </div>
+
+            <div class="nav-links" style="display: flex; gap: 25px; align-items: center;">
+                <a href="{{ path('app_post_index') }}" style="color: #fff; text-decoration: none; font-weight: 500;">
+                    <i class="ti ti-news"></i> Blog
+                </a>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_user_index') }}" style="color: #888; text-decoration: none;">
+                        <i class="ti ti-users"></i> Étudiants
+                    </a>
+                    <a href="{{ path('app_demande_index') }}" style="color: #888; text-decoration: none;">
+                        <i class="ti ti-settings"></i> Administration
+                    </a>
+                {% endif %}
+
+                <a href="{{ path('get_my_demande') }}" style="color: #888; text-decoration: none;">
+                    <i class="ti ti-file-text"></i> Mes Demandes
+                </a>
+            </div>
+
+            <div class="user-menu" style="color: #fff;">
+                {% if app.user %}
+                    <span style="font-size: 0.9rem; margin-right: 15px; color: #666;">{{ app.user.prenom }} {{ app.user.nom }}</span>
+                    <a href="{{ path('app_logout') }}" style="color: #f87171; text-decoration: none;"><i class="ti ti-logout"></i></a>
+                {% endif %}
+            </div>
+        </nav>
+
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>

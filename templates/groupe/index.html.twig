@@ -1,37 +1,89 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Groupe index{% endblock %}
+{% block title %}Gestion des Groupes{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Groupe index</h1>
+<div class="etu-page">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Date_creation</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for groupe in groupes %}
-            <tr>
-                <td>{{ groupe.id }}</td>
-                <td>{{ groupe.nom }}</td>
-                <td>{{ groupe.dateCreation ? groupe.dateCreation|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_groupe_show', {'id': groupe.id}) }}">show</a>
-                    <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="etu-header">
+        <div class="etu-header-icon">
+            <i class="ti ti-users-group"></i>
+        </div>
+        <div>
+            <h1 class="etu-header-title">Gestion des Groupes</h1>
+            <p class="etu-header-sub">
+                Gérez les groupes du système et leurs membres
+            </p>
+        </div>
+    </div>
 
-    <a href="{{ path('app_groupe_new') }}">Create new</a>
+    <div class="etu-filter-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="color: var(--text-muted); font-size: 0.9rem;">
+            Liste complète de tous les groupes disponibles.
+        </div>
+        <a href="{{ path('app_groupe_new') }}" class="etu-btn-primary" style="text-decoration: none;">
+            <i class="ti ti-plus"></i> Créer un nouveau groupe
+        </a>
+    </div>
+
+    <div class="etu-table-wrap">
+        <table class="etu-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th>Nom du groupe</th>
+                    <th>Créé le</th>
+                    <th class="etu-th-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for groupe in groupes %}
+                <tr>
+                    <td class="etu-td-num">#{{ groupe.id }}</td>
+                    <td>
+                        <div class="etu-td-name">
+                            <div class="etu-avatar"><i class="ti ti-users"></i></div>
+                            {{ groupe.nom }}
+                        </div>
+                    </td>
+                    <td class="etu-td-cin">{{ groupe.dateCreation ? groupe.dateCreation|date('d/m/Y') : '-' }}</td>
+                    <td class="etu-td-actions">
+                        <a href="{{ path('app_groupe_show', {'id': groupe.id}) }}" class="etu-btn-icon" title="Voir le groupe">
+                            <i class="ti ti-eye"></i>
+                        </a>
+                        <a href="{{ path('admin_groupe_membres', {'id': groupe.id}) }}" class="etu-btn-icon" title="Gérer les membres">
+                            <i class="ti ti-users-plus"></i>
+                        </a>
+                        <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}" class="etu-btn-icon etu-btn-edit" title="Modifier">
+                            <i class="ti ti-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">
+                        <div class="etu-empty">
+                            <i class="ti ti-ghost"></i>
+                            Aucun groupe trouvé.
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="{{ path('app_admin') }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="ti ti-arrow-left"></i> Retour à l'administration
+        </a>
+    </div>
+
+</div>
 {% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Membres du groupe{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="etu-page">
+    
+    <div class="etu-header">
+        <div class="etu-header-icon">
+            <i class="ti ti-users"></i>
+        </div>
+        <div>
+            <h1 class="etu-header-title">Membres : {{ groupe.nom ?? 'Groupe ' ~ groupe.id }}</h1>
+            <p class="etu-header-sub">
+                Gérez les membres de ce groupe
+            </p>
+        </div>
+    </div>
+
+    <div class="etu-filter-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="color: var(--text-muted); font-size: 0.9rem;">
+            Liste de tous les étudiants qui ont rejoint ce groupe.
+        </div>
+        <a href="{{ path('admin_groupe_add_membre', {'id': groupe.id}) }}" class="etu-btn-primary" style="text-decoration: none;">
+            <i class="ti ti-user-plus"></i> Ajouter un membre
+        </a>
+    </div>
+
+    <div class="etu-table-wrap">
+        <table class="etu-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th>Nom & Prénom</th>
+                    <th>Email</th>
+                    <th class="etu-th-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for membre in membres %}
+                    <tr>
+                        <td class="etu-td-num">#{{ membre.user.id }}</td>
+                        <td>
+                            <div class="etu-td-name">
+                                <div class="etu-avatar"><i class="ti ti-user"></i></div>
+                                {{ membre.user.nom }} {{ membre.user.prenom }}
+                            </div>
+                        </td>
+                        <td class="etu-td-email"><a href="mailto:{{ membre.user.email }}">{{ membre.user.email }}</a></td>
+                        <td class="etu-td-actions">
+                            {# Link to remove user from group #}
+                            <a href="#" class="etu-btn-icon etu-btn-delete" title="Retirer" onclick="return confirm('Êtes-vous sûr de vouloir retirer ce membre ?');">
+                                <i class="ti ti-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">
+                            <div class="etu-empty">
+                                <i class="ti ti-ghost"></i>
+                                Aucun membre dans ce groupe pour le moment.
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="{{ path('app_groupe_index') }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="ti ti-arrow-left"></i> Retour à la liste des groupes
+        </a>
+    </div>
+
+</div>
+{% endblock %}

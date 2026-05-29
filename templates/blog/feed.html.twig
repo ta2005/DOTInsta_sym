@@ -5,58 +5,86 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}"> {# Assuming recl-card is in styles or demands css #}
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
     <style>
-        .page-content { max-width: 800px; margin: 0 auto; padding: 20px; }
-        .recl-card { background: #1a1a1a; border: 1px solid #2e2e2e; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
-        .recl-header { display: flex; justify-content: space-between; border-bottom: 1px solid #2e2e2e; padding-bottom: 12px; margin-bottom: 12px;}
-        .recl-student { font-weight: 600; color: #f0f0f0; }
-        .badge--group { background: rgba(74,222,128,.1); color: #4ade80; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; }
-        .recl-body p { color: #d0d0d0; line-height: 1.6; }
-        .post-actions { margin-top: 15px; display: flex; gap: 10px; }
-        .btn-comment { background: #2a2a2a; color: #fff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.9rem;}
-        .btn-comment:hover { background: #3a3a3a; }
+        .feed-container { max-width: 850px; margin: 40px auto; padding: 0 20px; font-family: var(--font-display); }
+        .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px; margin-bottom: 24px; transition: transform 0.2s, box-shadow 0.2s; }
+        .post-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); border-color: var(--border-light); }
+        .post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .post-author-info { display: flex; align-items: center; gap: 12px; }
+        .post-avatar { width: 42px; height: 42px; background: linear-gradient(135deg, #3b5a80, #293f5c); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.1rem; }
+        .post-author-name { font-weight: 700; color: var(--text-primary); font-size: 1rem; margin-bottom: 2px; }
+        .post-date { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
+        .post-badge { background: var(--surface-3); border: 1px solid var(--border-light); color: var(--blue); padding: 6px 12px; border-radius: 100px; font-size: 0.75rem; font-family: var(--font-mono); display: inline-flex; align-items: center; gap: 6px; font-weight: 600; letter-spacing: 0.02em; }
+        .post-content { color: #e0e0e0; font-size: 1.05rem; line-height: 1.6; margin-bottom: 20px; word-wrap: break-word; }
+        .post-actions { display: flex; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .action-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--radius-lg); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.15s; }
+        .action-btn-primary { background: var(--text-primary); color: var(--bg); }
+        .action-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .action-btn-secondary { background: transparent; border: 1px solid var(--border-light); color: var(--text-muted); }
+        .action-btn-secondary:hover { color: var(--text-primary); border-color: var(--border-hover); background: var(--surface-2); }
     </style>
 {% endblock %}
 
 {% block body %}
-<div class="page-content">
+<div class="feed-container">
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <h1 style="color: white;"><i class="ti ti-activity"></i> Mon Flux</h1>
-        <a href="{{ path('app_groupe_index') }}" class="btn-comment" style="background: #3b5a80;">Parcourir les Groupes</a>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <div>
+            <h1 style="color: var(--text-primary); font-size: 2.2rem; margin: 0; display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -0.04em;">
+                <i class="ti ti-activity-heartbeat" style="color: var(--blue);"></i> Mon Flux
+            </h1>
+            <p style="color: var(--text-muted); margin: 5px 0 0; font-size: 0.9rem;">
+                Découvrez les dernières publications de vos groupes
+            </p>
+        </div>
+        <a href="{{ path('app_groupe_index') }}" class="action-btn action-btn-secondary" style="background: var(--surface-2);">
+            <i class="ti ti-search"></i> Parcourir les groupes
+        </a>
     </div>
 
     {% for post in posts %}
-        <div class="card recl-card">
-            <div class="recl-header">
-                <div class="recl-meta">
-                    <i class="ti ti-user" style="color: #888;"></i>
-                    <span class="recl-student">{{ post.auteurId.prenom }} {{ post.auteurId.nom }}</span>
-                    <small style="color: #888; margin-left: 10px;">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
+        <div class="post-card">
+            <div class="post-header">
+                <div class="post-author-info">
+                    <div class="post-avatar">
+                        {{ post.auteurId.prenom|slice(0,1)|upper }}
+                    </div>
+                    <div>
+                        <div class="post-author-name">{{ post.auteurId.prenom }} {{ post.auteurId.nom }}</div>
+                        <div class="post-date">{{ post.dateCreation|date('d M Y, H:i') }}</div>
+                    </div>
                 </div>
-                <span class="badge badge--group">
+                <div class="post-badge">
                     <i class="ti ti-users-group"></i> {{ post.groupId.nom }}
-                </span>
+                </div>
             </div>
 
-            <div class="recl-body">
-                <p>{{ post.contenu }}</p>
+            <div class="post-content">
+                {{ post.contenu|nl2br }}
+            </div>
 
-                <div class="post-actions">
-                    <a href="{{ path('app_post_show', {'id': post.id}) }}" class="btn-comment">
-                        <i class="ti ti-messages"></i> Voir les commentaires
+            <div class="post-actions">
+                <a href="{{ path('app_post_show', {'id': post.id}) }}" class="action-btn action-btn-secondary">
+                    <i class="ti ti-message-circle"></i> Commenter ({{ post.commentaires|length }})
+                </a>
+                {% if app.user == post.auteurId %}
+                    <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="action-btn action-btn-secondary" style="margin-left: auto;">
+                        <i class="ti ti-pencil"></i> Modifier
                     </a>
-                    {% if app.user == post.auteurId %}
-                        <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn-comment" style="background: transparent; border: 1px solid #3a3a3a;">Modifier</a>
-                    {% endif %}
-                </div>
+                {% endif %}
             </div>
         </div>
     {% else %}
-        <div class="empty-state" style="text-align: center; padding: 50px; background: #1a1a1a; border-radius: 12px; border: 1px dashed #3a3a3a;">
-            <i class="ti ti-ghost" style="font-size: 40px; color: #555;"></i>
-            <p style="color: #888; margin-top: 10px;">Votre flux est vide. Rejoignez des groupes pour voir des publications !</p>
+        <div class="etu-empty" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 60px 20px;">
+            <i class="ti ti-ghost" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 20px;"></i>
+            <h3 style="color: var(--text-primary); margin-bottom: 10px;">Votre flux est vide</h3>
+            <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto 20px;">
+                Rejoignez des groupes pour voir les publications de la communauté INSAT.
+            </p>
+            <a href="{{ path('app_groupe_index') }}" class="action-btn action-btn-primary">
+                Découvrir les groupes
+            </a>
         </div>
     {% endfor %}
 

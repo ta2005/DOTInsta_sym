@@ -1,13 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Groupe{% endblock %}
+{% block title %}Modifier le groupe{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+    <style>
+        .form-control { width: 100%; padding: 10px 14px; background: var(--surface-2); border: 1px solid var(--border-light); border-radius: var(--radius-lg); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-display); transition: border-color 0.2s, background 0.2s; font-weight: 500; margin-bottom: 15px; }
+        .form-control:focus { outline: none; border-color: #666; background: var(--surface-3); box-shadow: 0 0 0 3px rgba(255,255,255,0.04); }
+        label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-mono); margin-bottom: 6px; }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Groupe</h1>
+<div class="etu-page" style="max-width: 600px;">
 
-    {{ include('groupe/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="etu-header" style="margin-bottom: 20px;">
+        <div class="etu-header-icon">
+            <i class="ti ti-pencil"></i>
+        </div>
+        <div>
+            <h1 class="etu-header-title">Modifier: {{ groupe.nom }}</h1>
+            <p class="etu-header-sub">
+                Mettre à jour les informations du groupe
+            </p>
+        </div>
+    </div>
 
-    <a href="{{ path('app_groupe_index') }}">back to list</a>
+    <div class="etu-filter-card" style="margin-bottom: 20px;">
+        {{ include('groupe/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    </div>
 
-    {{ include('groupe/_delete_form.html.twig') }}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <a href="{{ path('app_groupe_index') }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="ti ti-arrow-left"></i> Retour à la liste
+        </a>
+        <div style="display: inline-block;">
+            {{ include('groupe/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+</div>
 {% endblock %}

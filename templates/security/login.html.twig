@@ -4,87 +4,44 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/forms.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/notifications.css') }}">
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 {% endblock %}
 
 {% block body %}
 <div class="wrap">
-    <main style="margin-top: 15vh;">
+    <header>
+        <nav class="topbar">
+            {# FIXED: Changed app_home to app_login #}
+            <a href="{{ path('app_login') }}" class="brand">
+                <img src="{{ asset('resources/logo.svg') }}" alt=".INSAT" class="brand-logo">
+            </a>
+        </nav>
+    </header>
 
+    <main style="margin-top: 10vh; max-width: 400px; margin-inline: auto;">
         {% if error %}
-            <div class="flash flash--error">
-                <i class="ti ti-circle-x"></i>
-                {{ error.messageKey|trans(error.messageData, 'security') }}
-            </div>
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        {% if app.user %}
-            <div class="flash flash--success" style="margin-bottom: 20px;">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-            </div>
-        {% endif %}
+        <form method="post" class="login-form">
+            <h2 class="form-page-title">Connexion</h2>
 
-        <div class="form-page-header">
-            <div class="form-page-icon">
-                <i class="ti ti-lock" aria-hidden="true"></i>
-            </div>
-            <div>
-                <h2 class="form-page-title">Connexion</h2>
-                <p class="form-page-sub">Accédez à votre espace</p>
-            </div>
-        </div>
-
-        <form method="post" class="login-form form-container">
-            <div class="form-section">
-                <div class="form-section-label">
-                    <i class="ti ti-mail"></i> Identifiants
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="inputEmail">Adresse email</label>
-                    <input class="form-input" type="email" id="inputEmail" name="_username"
-                           value="{{ last_username }}" required autofocus>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="inputPassword">Mot de passe</label>
-                    <div class="password-wrapper">
-                        <input class="form-input password-input" type="password"
-                               id="inputPassword" name="_password" required>
-                        <button type="button" class="password-toggle" onclick="togglePassword()">
-                            <i class="ti ti-eye" id="eye-icon"></i>
-                        </button>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
             </div>
 
-            {# Symfony Security CSRF Token #}
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+            </div>
+
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-            <div class="form-actions">
-                <button type="submit" class="form-btn-primary login-submit">
-                    <i class="ti ti-login"></i> Se connecter
-                </button>
-            </div>
+            <button class="etu-btn-primary" type="submit" style="width: 100%; margin-top: 20px;">
+                Se connecter
+            </button>
         </form>
     </main>
 </div>
-
-<script>
-    function togglePassword() {
-        const passInput = document.getElementById('inputPassword');
-        const eyeIcon = document.getElementById('eye-icon');
-        if (passInput.type === 'password') {
-            passInput.type = 'text';
-            eyeIcon.classList.replace('ti-eye', 'ti-eye-off');
-        } else {
-            passInput.type = 'password';
-            eyeIcon.classList.replace('ti-eye-off', 'ti-eye');
-        }
-    }
-</script>
 {% endblock %}

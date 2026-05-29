@@ -1,11 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Post{% endblock %}
+{% block title %}Nouvelle Publication{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+    <style>
+        .form-control, textarea { width: 100%; padding: 12px 16px; background: var(--surface-2); border: 1px solid var(--border-light); border-radius: var(--radius-lg); color: var(--text-primary); font-size: 1rem; font-family: var(--font-display); transition: border-color 0.2s, background 0.2s; font-weight: 500; margin-bottom: 20px; resize: vertical; min-height: 120px; }
+        .form-control:focus, textarea:focus { outline: none; border-color: #666; background: var(--surface-3); box-shadow: 0 0 0 3px rgba(255,255,255,0.04); }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-mono); margin-bottom: 8px; }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Post</h1>
+<div class="etu-page" style="max-width: 650px;">
 
-    {{ include('post/_form.html.twig') }}
+    <div class="etu-header" style="margin-bottom: 24px;">
+        <div class="etu-header-icon" style="color: var(--blue);">
+            <i class="ti ti-pencil-plus"></i>
+        </div>
+        <div>
+            <h1 class="etu-header-title">Nouvelle Publication</h1>
+            <p class="etu-header-sub">
+                Publier dans le groupe <strong>{{ post.groupId.nom }}</strong>
+            </p>
+        </div>
+    </div>
 
-    <a href="{{ path('app_post_index') }}">back to list</a>
+    <div class="etu-filter-card" style="padding: 30px;">
+        {{ form_start(form) }}
+            <div style="margin-bottom: 20px;">
+                {{ form_row(form.contenu, {
+                    'attr': {'placeholder': 'Exprimez-vous...'},
+                    'label': 'Message'
+                }) }}
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <a href="{{ path('app_post_index') }}" class="etu-btn-secondary" style="text-decoration: none;">Annuler</a>
+                <button type="submit" class="etu-btn-primary" style="padding: 12px 24px;">
+                    <i class="ti ti-send"></i> Publier
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+</div>
 {% endblock %}

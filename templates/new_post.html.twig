@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau contenu{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    <h2>Rédiger</h2>
+
+    {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_row(form.contenu, {'attr': {'class': 'form-input', 'rows': '4'}}) }}
+        </div>
+
+        <button type="submit" class="form-btn-primary">Publier</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

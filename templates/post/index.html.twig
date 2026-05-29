@@ -1,37 +1,104 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post index{% endblock %}
+{% block title %}Fil d'actualité - INSAT{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+    <style>
+        .feed-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; font-family: var(--font-display); display: flex; gap: 40px; }
+        @media (max-width: 900px) { .feed-container { flex-direction: column; } }
+        
+        .main-column { flex: 1; min-width: 0; }
+        .sidebar-column { width: 320px; flex-shrink: 0; }
+        
+        .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px; margin-bottom: 24px; transition: transform 0.2s, box-shadow 0.2s; }
+        .post-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); border-color: var(--border-light); }
+        .post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .post-author-info { display: flex; align-items: center; gap: 12px; }
+        .post-avatar { width: 42px; height: 42px; background: linear-gradient(135deg, #3b5a80, #293f5c); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.1rem; }
+        .post-author-name { font-weight: 700; color: var(--text-primary); font-size: 1rem; margin-bottom: 2px; }
+        .post-date { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
+        .post-badge { background: var(--surface-3); border: 1px solid var(--border-light); color: var(--blue); padding: 6px 12px; border-radius: 100px; font-size: 0.75rem; font-family: var(--font-mono); display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+        .post-content { color: #e0e0e0; font-size: 1.05rem; line-height: 1.6; margin-bottom: 20px; word-wrap: break-word; }
+        .post-actions { display: flex; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        
+        .action-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--radius-lg); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.15s; }
+        .action-btn-secondary { background: transparent; border: 1px solid var(--border-light); color: var(--text-muted); }
+        .action-btn-secondary:hover { color: var(--text-primary); border-color: var(--border-hover); background: var(--surface-2); }
+        
+        .sidebar-widget { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px; position: sticky; top: 100px; }
+        .widget-title { color: var(--text-primary); font-size: 1.1rem; font-weight: 700; margin: 0 0 20px; display: flex; align-items: center; gap: 8px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Post index</h1>
+<div class="feed-container">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Contenu</th>
-                <th>Date_creation</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    {# ── LEFT COLUMN: THE FEED ── #}
+    <div class="main-column">
+        <h1 style="color: var(--text-primary); font-size: 2.2rem; margin: 0 0 30px; display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -0.04em;">
+            <i class="ti ti-planet" style="color: var(--blue);"></i> Fil d'actualité
+        </h1>
+
         {% for post in posts %}
-            <tr>
-                <td>{{ post.id }}</td>
-                <td>{{ post.contenu }}</td>
-                <td>{{ post.dateCreation ? post.dateCreation|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
-                    <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-author-info">
+                        <div class="post-avatar">
+                            {{ post.auteurId.prenom|slice(0,1)|upper }}
+                        </div>
+                        <div>
+                            <div class="post-author-name">{{ post.auteurId.prenom }} {{ post.auteurId.nom }}</div>
+                            <div class="post-date">{{ post.dateCreation|date('d M Y, H:i') }}</div>
+                        </div>
+                    </div>
+                    <div class="post-badge">
+                        <i class="ti ti-users-group"></i> {{ post.groupId.nom }}
+                    </div>
+                </div>
 
-    <a href="{{ path('app_post_new') }}">Create new</a>
+                <div class="post-content">
+                    {{ post.contenu|nl2br }}
+                </div>
+
+                <div class="post-actions">
+                    <a href="{{ path('app_post_show', {'id': post.id}) }}" class="action-btn action-btn-secondary">
+                        <i class="ti ti-message-circle"></i> Commenter
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="etu-empty" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 60px 20px;">
+                <i class="ti ti-ghost" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 20px;"></i>
+                <h3 style="color: var(--text-primary); margin-bottom: 10px;">Aucune publication</h3>
+                <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto;">
+                    Il n'y a pas encore de publications. Soyez le premier à partager quelque chose !
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# ── RIGHT COLUMN: GROUPS SIDEBAR ── #}
+    <div class="sidebar-column">
+        <div class="sidebar-widget">
+            <h3 class="widget-title">
+                <i class="ti ti-layout-grid" style="color: var(--blue);"></i> Actions Rapides
+            </h3>
+
+            <a href="{{ path('app_groupe_index') }}" class="etu-btn-primary" style="text-decoration: none; display: flex; width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem; margin-bottom: 20px;">
+                <i class="ti ti-search"></i> Parcourir les groupes
+            </a>
+
+            <div style="background: var(--surface-2); border-radius: var(--radius-lg); padding: 15px; border: 1px dashed var(--border-light);">
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; line-height: 1.6;">
+                    <i class="ti ti-info-circle" style="color: var(--blue); margin-right: 5px;"></i>
+                    <em>Cliquez sur un groupe dans "Parcourir les groupes" pour y publier un nouveau message.</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

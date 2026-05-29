@@ -1,4 +1,8 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+        {{ form_widget(form) }}
+    </div>
+    <button type="submit" class="etu-btn-primary" style="width: 100%;">
+        <i class="ti ti-check"></i> {{ button_label|default('Enregistrer') }}
+    </button>
 {{ form_end(form) }}

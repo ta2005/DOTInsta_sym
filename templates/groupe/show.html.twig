@@ -1,30 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Groupe{% endblock %}
+{% block title %}Groupe: {{ groupe.nom }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Groupe</h1>
+<div class="etu-page" style="max-width: 800px;">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ groupe.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ groupe.nom }}</td>
-            </tr>
-            <tr>
-                <th>Date_creation</th>
-                <td>{{ groupe.dateCreation ? groupe.dateCreation|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="etu-header" style="margin-bottom: 20px;">
+        <div class="etu-header-icon">
+            <i class="ti ti-users-group"></i>
+        </div>
+        <div>
+            <h1 class="etu-header-title">{{ groupe.nom }}</h1>
+            <p class="etu-header-sub">
+                Modérateur: {{ groupe.moderateurId.prenom }} {{ groupe.moderateurId.nom }}
+            </p>
+        </div>
+    </div>
 
-    <a href="{{ path('app_groupe_index') }}">back to list</a>
+    <div class="etu-filter-card" style="margin-bottom: 30px;">
+        <h3 style="color: var(--text-primary); margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+            <i class="ti ti-users"></i> Membres du groupe
+        </h3>
+        
+        <div style="background: var(--surface-2); border-radius: var(--radius-lg); border: 1px solid var(--border-light); overflow: hidden;">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for membership in groupe.membreGroupes %}
+                    <li style="padding: 12px 18px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
+                            <div class="etu-avatar"><i class="ti ti-user"></i></div>
+                            {{ membership.userId.prenom }} {{ membership.userId.nom }}
+                        </span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">
+                            Admis le {{ membership.dateAdhesion|date('d/m/Y') }}
+                        </span>
+                    </li>
+                {% else %}
+                    <li style="padding: 20px; text-align: center; color: var(--text-muted);">
+                        <i class="ti ti-ghost" style="font-size: 1.5rem; display: block; margin-bottom: 8px; color: var(--text-dim);"></i>
+                        Aucun membre.
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-    <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}">edit</a>
+    <div style="display: flex; gap: 15px;">
+        <a href="{{ path('app_groupe_index') }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="ti ti-arrow-left"></i> Retour à la liste
+        </a>
+        <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="ti ti-pencil"></i> Modifier le groupe
+        </a>
+    </div>
 
-    {{ include('groupe/_delete_form.html.twig') }}
+</div>
 {% endblock %}
