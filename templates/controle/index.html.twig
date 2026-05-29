@@ -44,6 +44,9 @@
                         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
                             <a href="{{ path('app_controle_edit', {'id': controle.id}) }}" class="etu-btn-icon" title="Modifier"><i class="ti ti-pencil"></i></a>
                         {% endif %}
+                        {% if is_granted('ROLE_ETUDIANT') and controle.statut.value != 'VERIFIE' %}
+                            <a href="{{ path('app_reclamation_new', {'id': controle.id}) }}" class="etu-btn-icon" title="Faire une réclamation" style="color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);"><i class="ti ti-alert-triangle"></i></a>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}

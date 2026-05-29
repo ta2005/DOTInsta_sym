@@ -22,7 +22,7 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: app_blog_feed
+                default_target_path: app_dashboard
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -36,17 +36,17 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/setup-admin, roles: ROLE_ADMIN }
+        - { path: ^/generate-test-data, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_ADMIN }
         - { path: ^/enseignant, roles: ROLE_ADMIN }
-        - { path: ^/groupe, roles: ROLE_USER }
-        - { path: ^/blog, roles: ROLE_USER }
-        - { path: ^/post, roles: ROLE_USER }
-        - { path: ^/commentaire, roles: ROLE_USER }
         - { path: ^/demande/me, roles: ROLE_USER }
         - { path: ^/demande/new, roles: ROLE_USER }
         - { path: ^/demande, roles: ROLE_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/enseignement, roles: ROLE_ADMIN }
+        - { path: ^/matiere, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:

@@ -25,6 +25,9 @@
         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
             <a href="{{ path('app_controle_edit', {'id': controle.id}) }}" class="etu-btn-primary">Modifier</a>
         {% endif %}
+        {% if is_granted('ROLE_ETUDIANT') and controle.statut.value != 'VERIFIE' %}
+            <a href="{{ path('app_reclamation_new', {'id': controle.id}) }}" class="etu-btn-primary" style="background: #f59e0b; border-color: #f59e0b;"><i class="ti ti-alert-triangle"></i> Faire une réclamation</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de Bord - INSAT{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .dashboard-container {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .dashboard-header {
+            margin-bottom: 40px;
+        }
+        .dashboard-title {
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin: 0 0 10px;
+        }
+        .dashboard-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .dashboard-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 25px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-color: var(--blue);
+        }
+        .dashboard-icon {
+            font-size: 2.5rem;
+            color: var(--blue);
+            background: rgba(59, 90, 128, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0 0 5px;
+        }
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Bienvenue, {{ app.user.prenom }} 👋</h1>
+        <p class="dashboard-subtitle">Gérez vos activités, consultez vos notes et restez à jour.</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <a href="{{ path('app_post_index') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-news"></i></div>
+            <div>
+                <h3 class="card-title">Blog et Groupes</h3>
+                <p class="card-desc">Consultez les dernières publications</p>
+            </div>
+        </a>
+
+        <a href="{{ path('app_controle_index') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-clipboard-list"></i></div>
+            <div>
+                <h3 class="card-title">Mes Notes</h3>
+                <p class="card-desc">Vos contrôles et résultats</p>
+            </div>
+        </a>
+
+        <a href="{{ path('get_my_demande') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-file-text"></i></div>
+            <div>
+                <h3 class="card-title">Mes Demandes</h3>
+                <p class="card-desc">Attestations et relevés</p>
+            </div>
+        </a>
+
+        <a href="{{ path('app_reclamation_index') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-alert-triangle"></i></div>
+            <div>
+                <h3 class="card-title">Réclamations</h3>
+                <p class="card-desc">Suivez vos réclamations</p>
+            </div>
+        </a>
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+    <h2 style="margin-top: 50px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Administration</h2>
+    <div class="dashboard-grid" style="margin-top: 20px;">
+        <a href="{{ path('app_user_index') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-users"></i></div>
+            <div>
+                <h3 class="card-title">Étudiants</h3>
+                <p class="card-desc">Gérer les comptes</p>
+            </div>
+        </a>
+        <a href="{{ path('app_enseignant_index') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-briefcase"></i></div>
+            <div>
+                <h3 class="card-title">Enseignants</h3>
+                <p class="card-desc">Gérer le personnel</p>
+            </div>
+        </a>
+        <a href="{{ path('app_demande_index') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-settings"></i></div>
+            <div>
+                <h3 class="card-title">Administration</h3>
+                <p class="card-desc">Gérer les demandes</p>
+            </div>
+        </a>
+        <a href="{{ path('app_enseignement_index') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-book"></i></div>
+            <div>
+                <h3 class="card-title">Enseignements</h3>
+                <p class="card-desc">Associer profs et matières</p>
+            </div>
+        </a>
+        <a href="{{ path('app_matiere_index') }}" class="dashboard-card">
+            <div class="dashboard-icon"><i class="ti ti-books"></i></div>
+            <div>
+                <h3 class="card-title">Matières</h3>
+                <p class="card-desc">Gérer le curriculum</p>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

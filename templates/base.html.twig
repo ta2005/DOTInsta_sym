@@ -10,27 +10,22 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body class="bg">
+        {% block navbar %}
         <nav class="topbar" style="display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 70px; background: #111; border-bottom: 1px solid #2e2e2e; position: sticky; top: 0; z-index: 1000;">
             <div class="brand">
-                <a href="{{ path('app_post_index') }}">
+                <a href="{{ app.user ? path('app_dashboard') : path('app_login') }}">
                     <img src="{{ asset('resources/logo.svg') }}" alt="INSAT" style="height: 30px;">
                 </a>
             </div>
 
-            <div class="nav-links" style="display: flex; gap: 25px; align-items: center;">
-                <a href="{{ path('app_post_index') }}" style="color: #fff; text-decoration: none; font-weight: 500;">
+            {% if app.user %}
+            <div class="nav-links" style="display: flex; gap: 20px; align-items: center;">
+                <a href="{{ path('app_dashboard') }}" style="color: #fff; text-decoration: none;">
+                    <i class="ti ti-layout-dashboard"></i> Tableau de bord
+                </a>
+                <a href="{{ path('app_blog_feed') }}" style="color: #888; text-decoration: none;">
                     <i class="ti ti-news"></i> Blog
                 </a>
-
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('app_user_index') }}" style="color: #888; text-decoration: none;">
-                        <i class="ti ti-users"></i> Étudiants
-                    </a>
-                    <a href="{{ path('app_demande_index') }}" style="color: #888; text-decoration: none;">
-                        <i class="ti ti-settings"></i> Administration
-                    </a>
-                {% endif %}
-
                 <a href="{{ path('get_my_demande') }}" style="color: #888; text-decoration: none;">
                     <i class="ti ti-file-text"></i> Mes Demandes
                 </a>
@@ -40,17 +35,47 @@
                 <a href="{{ path('app_controle_index') }}" style="color: #888; text-decoration: none;">
                     <i class="ti ti-clipboard-list"></i> Contrôles
                 </a>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div style="width: 1px; height: 24px; background: #333; margin: 0 10px;"></div>
+                    <a href="{{ path('app_user_index') }}" style="color: #888; text-decoration: none;" title="Étudiants">
+                        <i class="ti ti-users"></i>
+                    </a>
+                    <a href="{{ path('app_enseignant_index') }}" style="color: #888; text-decoration: none;" title="Enseignants">
+                        <i class="ti ti-briefcase"></i>
+                    </a>
+                    <a href="{{ path('app_demande_index') }}" style="color: #888; text-decoration: none;" title="Administration Demandes">
+                        <i class="ti ti-settings"></i>
+                    </a>
+                    <a href="{{ path('app_enseignement_index') }}" style="color: #888; text-decoration: none;" title="Enseignements">
+                        <i class="ti ti-book"></i>
+                    </a>
+                    <a href="{{ path('app_matiere_index') }}" style="color: #888; text-decoration: none;" title="Matières">
+                        <i class="ti ti-books"></i>
+                    </a>
+                {% endif %}
             </div>
 
             <div class="user-menu" style="color: #fff;">
-                {% if app.user %}
-                    <span style="font-size: 0.9rem; margin-right: 15px; color: #666;">{{ app.user.prenom }} {{ app.user.nom }}</span>
-                    <a href="{{ path('app_logout') }}" style="color: #f87171; text-decoration: none;"><i class="ti ti-logout"></i></a>
-                {% endif %}
+                <span style="font-size: 0.9rem; margin-right: 15px; color: #666;">{{ app.user.prenom }} {{ app.user.nom }}</span>
+                <a href="{{ path('app_logout') }}" style="color: #f87171; text-decoration: none;"><i class="ti ti-logout"></i></a>
             </div>
+            {% endif %}
         </nav>
+        {% endblock %}
 
-        <div class="container">
+        <div class="container" style="padding-top: 20px;">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div style="background: {% if label == 'error' %}rgba(239, 68, 68, 0.1){% else %}rgba(16, 185, 129, 0.1){% endif %}; 
+                                border: 1px solid {% if label == 'error' %}rgba(239, 68, 68, 0.3){% else %}rgba(16, 185, 129, 0.3){% endif %}; 
+                                color: {% if label == 'error' %}#ef4444{% else %}#10b981{% endif %}; 
+                                padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
             {% block body %}{% endblock %}
         </div>
     </body>
