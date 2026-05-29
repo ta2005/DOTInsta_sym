@@ -32,6 +32,9 @@ final class EnseignantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $enseignant->setMotDePass(
+                $hasher->hashPassword($enseignant,$user->getMotDePass())
+            );
             $entityManager->persist($enseignant);
             $entityManager->flush();
 

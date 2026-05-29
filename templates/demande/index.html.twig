@@ -22,8 +22,8 @@
                 <td>{{ demande.id }}</td>
                 <td>{{ demande.message }}</td>
                 <td>{{ demande.dateCreation ? demande.dateCreation|date('Y-m-d') : '' }}</td>
-                <td>{{ demande.statut }}</td>
-                <td>{{ demande.type }}</td>
+                <td>{{ demande.statut.value }}</td>
+                <td>{{ demande.type.value }}</td>
                 <td>
                     <a href="{{ path('app_demande_show', {'id': demande.id}) }}">show</a>
                     <a href="{{ path('app_demande_edit', {'id': demande.id}) }}">edit</a>
