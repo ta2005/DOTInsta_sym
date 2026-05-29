@@ -22,7 +22,7 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: app_demande_index
+                default_target_path: app_blog_feed
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -39,7 +39,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_ADMIN }
         - { path: ^/enseignant, roles: ROLE_ADMIN }
-        - { path: ^/groupe, roles: ROLE_ADMIN }
+        - { path: ^/groupe, roles: ROLE_USER }
         - { path: ^/blog, roles: ROLE_USER }
         - { path: ^/post, roles: ROLE_USER }
         - { path: ^/commentaire, roles: ROLE_USER }

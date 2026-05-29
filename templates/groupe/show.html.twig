@@ -30,7 +30,7 @@
         
         <div style="background: var(--surface-2); border-radius: var(--radius-lg); border: 1px solid var(--border-light); overflow: hidden;">
             <ul style="list-style: none; padding: 0; margin: 0;">
-                {% for membership in groupe.membreGroupes %}
+                {% for membership in memberships %}
                     <li style="padding: 12px 18px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
                             <div class="etu-avatar"><i class="ti ti-user"></i></div>
@@ -52,11 +52,16 @@
 
     <div style="display: flex; gap: 15px;">
         <a href="{{ path('app_groupe_index') }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-            <i class="ti ti-arrow-left"></i> Retour à la liste
+            <i class="ti ti-arrow-left"></i> Retour aux groupes
         </a>
-        <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-            <i class="ti ti-pencil"></i> Modifier le groupe
+        <a href="{{ path('app_post_new', {'id': groupe.id}) }}" class="etu-btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="ti ti-pencil-plus"></i> Publier un message
         </a>
+        {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-left: auto;">
+            <i class="ti ti-settings"></i> Paramètres du groupe
+        </a>
+        {% endif %}
     </div>
 
 </div>

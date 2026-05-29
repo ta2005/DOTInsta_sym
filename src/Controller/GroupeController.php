@@ -18,7 +18,6 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/groupe')]
-#[IsGranted('ROLE_ADMIN')]
 final class GroupeController extends AbstractController
 {
     #[Route(name: 'app_groupe_index', methods: ['GET'])]
@@ -30,6 +29,7 @@ final class GroupeController extends AbstractController
     }
 
     #[Route('/new', name: 'app_groupe_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $groupe = new Groupe();
@@ -52,14 +52,18 @@ final class GroupeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_groupe_show', methods: ['GET'])]
-    public function show(Groupe $groupe): Response
+    public function show(Groupe $groupe, \App\Repository\MembreGroupeRepository $membreGroupeRepository): Response
     {
+        $memberships = $membreGroupeRepository->findBy(['groupe_d' => $groupe]);
+
         return $this->render('groupe/show.html.twig', [
             'groupe' => $groupe,
+            'memberships' => $memberships,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_groupe_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Groupe $groupe, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(GroupeType::class, $groupe);
@@ -78,6 +82,7 @@ final class GroupeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_groupe_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Groupe $groupe, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$groupe->getId(), $request->getPayload()->getString('_token'))) {
@@ -89,6 +94,7 @@ final class GroupeController extends AbstractController
     }
 
     #[Route('{id}/add-user/{userId}',name: 'app_ajouter_user_groupe')]
+    #[IsGranted('ROLE_ADMIN')]
     public function join(Groupe $groupe,
                         #[MapEntity(id: 'userId')] User $user,
                         EntityManagerInterface $entityManager):Response{
