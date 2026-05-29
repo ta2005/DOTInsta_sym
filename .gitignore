@@ -18,3 +18,5 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+check_css.sh
+all_classes.txt
