@@ -105,6 +105,46 @@ final class GroupeController extends AbstractController
         $entityManager->persist($membreGroupe);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_groupe_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_groupe_show', ['id' => $groupe->getId()], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/add-member-list', name: 'app_groupe_add_membre_list', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function addMembreList(Groupe $groupe, \App\Repository\UserRepository $userRepository, \App\Repository\MembreGroupeRepository $membreGroupeRepository): Response
+    {
+        $allUsers = $userRepository->findAll();
+        $memberships = $membreGroupeRepository->findBy(['groupe_d' => $groupe]);
+        
+        $memberIds = [];
+        foreach ($memberships as $m) {
+            $memberIds[] = $m->getUserId()->getId();
+        }
+        
+        $nonMembers = [];
+        foreach ($allUsers as $user) {
+            if (!in_array($user->getId(), $memberIds)) {
+                $nonMembers[] = $user;
+            }
+        }
+
+        return $this->render('groupe/add_membre_list.html.twig', [
+            'groupe' => $groupe,
+            'nonMembers' => $nonMembers,
+        ]);
+    }
+
+    #[Route('{id}/remove-user/{userId}',name: 'app_retirer_user_groupe')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function removeUser(Groupe $groupe,
+                        #[MapEntity(id: 'userId')] User $user,
+                        EntityManagerInterface $entityManager,
+                        \App\Repository\MembreGroupeRepository $membreGroupeRepository):Response{
+        $membership = $membreGroupeRepository->findOneBy(['groupe_d' => $groupe, 'user_id' => $user]);
+        if ($membership) {
+            $entityManager->remove($membership);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_groupe_show', ['id' => $groupe->getId()], Response::HTTP_SEE_OTHER);
     }
 }

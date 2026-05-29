@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un membre à {{ groupe.nom }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="etu-page" style="max-width: 800px;">
+
+    <div class="etu-header" style="margin-bottom: 20px;">
+        <div class="etu-header-icon">
+            <i class="ti ti-user-plus"></i>
+        </div>
+        <div>
+            <h1 class="etu-header-title">Ajouter un membre</h1>
+            <p class="etu-header-sub">
+                Ajouter un étudiant au groupe: <strong>{{ groupe.nom }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="etu-filter-card" style="margin-bottom: 30px;">
+        <div style="background: var(--surface-2); border-radius: var(--radius-lg); border: 1px solid var(--border-light); overflow: hidden;">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for user in nonMembers %}
+                    <li style="padding: 12px 18px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
+                            <div class="etu-avatar"><i class="ti ti-user"></i></div>
+                            {{ user.prenom }} {{ user.nom }}
+                        </span>
+                        <a href="{{ path('app_ajouter_user_groupe', {'id': groupe.id, 'userId': user.id}) }}" class="etu-btn-primary" style="padding: 6px 12px; font-size: 0.8rem; text-decoration: none;">
+                            <i class="ti ti-plus"></i> Ajouter
+                        </a>
+                    </li>
+                {% else %}
+                    <li style="padding: 20px; text-align: center; color: var(--text-muted);">
+                        <i class="ti ti-check" style="font-size: 1.5rem; display: block; margin-bottom: 8px; color: var(--text-dim);"></i>
+                        Tous les étudiants sont déjà membres de ce groupe.
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 15px;">
+        <a href="{{ path('app_groupe_show', {'id': groupe.id}) }}" class="etu-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="ti ti-arrow-left"></i> Retour au groupe
+        </a>
+    </div>
+
+</div>
+{% endblock %}

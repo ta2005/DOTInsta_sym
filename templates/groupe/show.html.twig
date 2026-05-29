@@ -24,8 +24,13 @@
     </div>
 
     <div class="etu-filter-card" style="margin-bottom: 30px;">
-        <h3 style="color: var(--text-primary); margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-            <i class="ti ti-users"></i> Membres du groupe
+        <h3 style="color: var(--text-primary); margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; justify-content: space-between;">
+            <span><i class="ti ti-users"></i> Membres du groupe</span>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_groupe_add_membre_list', {'id': groupe.id}) }}" class="etu-btn-primary" style="font-size: 0.85rem; padding: 6px 12px; text-decoration: none;">
+                    <i class="ti ti-user-plus"></i> Ajouter un membre
+                </a>
+            {% endif %}
         </h3>
         
         <div style="background: var(--surface-2); border-radius: var(--radius-lg); border: 1px solid var(--border-light); overflow: hidden;">
@@ -36,8 +41,15 @@
                             <div class="etu-avatar"><i class="ti ti-user"></i></div>
                             {{ membership.userId.prenom }} {{ membership.userId.nom }}
                         </span>
-                        <span style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">
-                            Admis le {{ membership.dateAdhesion|date('d/m/Y') }}
+                        <span style="display: flex; align-items: center; gap: 15px;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">
+                                Admis le {{ membership.dateAdhesion|date('d/m/Y') }}
+                            </span>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_retirer_user_groupe', {'id': groupe.id, 'userId': membership.userId.id}) }}" class="etu-btn-icon" style="color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);" title="Retirer du groupe">
+                                    <i class="ti ti-user-minus"></i>
+                                </a>
+                            {% endif %}
                         </span>
                     </li>
                 {% else %}
