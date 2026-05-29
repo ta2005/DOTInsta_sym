@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Controle{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="etu-page" style="max-width: 800px;">
+    <h1 class="etu-header-title">Contrôle #{{ controle.id }}</h1>
+
+    <div class="etu-filter-card">
+        <p><strong>Type:</strong> {{ controle.type.value|default(controle.type) }}</p>
+        <p><strong>Enseignement:</strong> {{ controle.enseignementId }}</p>
+        <p><strong>Etudiant:</strong> {{ controle.etudiantId }}</p>
+        <p><strong>Note:</strong> {{ controle.note|default('Non noté') }}</p>
+        <p><strong>Statut:</strong> {{ controle.statut.value|default(controle.statut) }}</p>
+    </div>
+
+    <div style="margin-top: 15px;">
+        <a href="{{ path('app_controle_index') }}" class="etu-btn-secondary">Retour à la liste</a>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+            <a href="{{ path('app_controle_edit', {'id': controle.id}) }}" class="etu-btn-primary">Modifier</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

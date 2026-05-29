@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Matière{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="etu-page" style="max-width: 600px;">
+    <h1 class="etu-header-title">Modifier Matière</h1>
+
+    <div class="etu-filter-card">
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="etu-btn-primary" style="margin-top: 15px;">Mettre à jour</button>
+        {{ form_end(form) }}
+    </div>
+
+    <form method="post" action="{{ path('app_matiere_delete', {'id': matiere.id}) }}" onsubmit="return confirm('Êtes-vous sûr ?');" style="margin-top: 15px; display: inline-block;">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ matiere.id) }}">
+        <button class="etu-btn-icon" style="color: red; border: 1px solid red; padding: 5px 10px; border-radius: 5px;"><i class="ti ti-trash"></i> Supprimer</button>
+    </form>
+    <a href="{{ path('app_matiere_index') }}" class="etu-btn-secondary" style="margin-top: 15px; display: inline-block; margin-left: 10px;">Retour à la liste</a>
+</div>
+{% endblock %}

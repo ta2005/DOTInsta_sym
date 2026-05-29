@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enseignement{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="etu-page" style="max-width: 800px;">
+    <h1 class="etu-header-title">Enseignement: {{ enseignement.nom }}</h1>
+
+    <div class="etu-filter-card">
+        <p><strong>Matière:</strong> {{ enseignement.matiereId }}</p>
+        <p><strong>Professeur:</strong> {{ enseignement.professeurId }}</p>
+        <p><strong>Date Début:</strong> {{ enseignement.dateDebut ? enseignement.dateDebut|date('d/m/Y') : '' }}</p>
+    </div>
+
+    <div style="margin-top: 15px;">
+        <a href="{{ path('app_enseignement_index') }}" class="etu-btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_enseignement_edit', {'id': enseignement.id}) }}" class="etu-btn-primary">Modifier</a>
+    </div>
+</div>
+{% endblock %}

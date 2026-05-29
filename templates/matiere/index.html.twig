@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Matières{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="etu-page">
+    <div class="etu-header">
+        <h1 class="etu-header-title">Matières</h1>
+        <a href="{{ path('app_matiere_new') }}" class="etu-btn-primary">Nouvelle Matière</a>
+    </div>
+
+    <div class="etu-table-wrap">
+        <table class="etu-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Filière</th>
+                    <th>Niveau</th>
+                    <th>Semestre</th>
+                    <th>Nom</th>
+                    <th>Coefficient</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for matiere in matieres %}
+                <tr>
+                    <td>{{ matiere.id }}</td>
+                    <td>{{ matiere.filiere }}</td>
+                    <td>{{ matiere.niveau }}</td>
+                    <td>{{ matiere.semestre }}</td>
+                    <td>{{ matiere.nomMatiere }}</td>
+                    <td>{{ matiere.coefficient }}</td>
+                    <td class="etu-td-actions">
+                        <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}" class="etu-btn-icon" title="Voir"><i class="ti ti-eye"></i></a>
+                        <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="etu-btn-icon" title="Modifier"><i class="ti ti-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 20px;">Aucune matière trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

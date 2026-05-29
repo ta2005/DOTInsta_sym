@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Matière{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="etu-page" style="max-width: 800px;">
+    <h1 class="etu-header-title">Matière: {{ matiere.nomMatiere }}</h1>
+
+    <div class="etu-filter-card">
+        <p><strong>Filière:</strong> {{ matiere.filiere }}</p>
+        <p><strong>Niveau:</strong> {{ matiere.niveau }}</p>
+        <p><strong>Semestre:</strong> {{ matiere.semestre }}</p>
+        <p><strong>Coefficient:</strong> {{ matiere.coefficient }}</p>
+    </div>
+
+    <div style="margin-top: 15px;">
+        <a href="{{ path('app_matiere_index') }}" class="etu-btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="etu-btn-primary">Modifier</a>
+    </div>
+</div>
+{% endblock %}

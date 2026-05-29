@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enseignements{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="etu-page">
+    <div class="etu-header">
+        <h1 class="etu-header-title">Enseignements</h1>
+        <a href="{{ path('app_enseignement_new') }}" class="etu-btn-primary">Nouvel Enseignement</a>
+    </div>
+
+    <div class="etu-table-wrap">
+        <table class="etu-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Date Début</th>
+                    <th>Matière</th>
+                    <th>Professeur</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for enseignement in enseignements %}
+                <tr>
+                    <td>{{ enseignement.id }}</td>
+                    <td>{{ enseignement.nom }}</td>
+                    <td>{{ enseignement.dateDebut ? enseignement.dateDebut|date('d/m/Y') : '' }}</td>
+                    <td>{{ enseignement.matiereId }}</td>
+                    <td>{{ enseignement.professeurId }}</td>
+                    <td class="etu-td-actions">
+                        <a href="{{ path('app_enseignement_show', {'id': enseignement.id}) }}" class="etu-btn-icon" title="Voir"><i class="ti ti-eye"></i></a>
+                        <a href="{{ path('app_enseignement_edit', {'id': enseignement.id}) }}" class="etu-btn-icon" title="Modifier"><i class="ti ti-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px;">Aucun enseignement trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
