@@ -28,11 +28,9 @@ body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     color: var(--text-primary);
     min-height: 100vh;
-    /* cursor: url('../resources/mouse.png'), auto; */
 }
 
 a:hover {
-    /* cursor: url('../resources/hovermouse.png'), pointer; */
 }
 
 .wrap {
