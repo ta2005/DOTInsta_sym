@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Entity;
@@ -15,6 +16,9 @@ class Controle
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $titre = null;
+
     #[ORM\Column(nullable: true)]
     private ?float $note = null;
 
@@ -23,6 +27,30 @@ class Controle
 
     #[ORM\Column(length: 255, enumType: StatutNoteEnum::class)]
     private ?StatutNoteEnum $statut = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $dateControle = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $duree = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fichier = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $corrige = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $publie = false;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $salle = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $semestre = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -37,6 +65,17 @@ class Controle
         return $this->id;
     }
 
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(string $titre): static
+    {
+        $this->titre = $titre;
+        return $this;
+    }
+
     public function getNote(): ?float
     {
         return $this->note;
@@ -45,7 +84,6 @@ class Controle
     public function setNote(?float $note): static
     {
         $this->note = $note;
-
         return $this;
     }
 
@@ -57,7 +95,6 @@ class Controle
     public function setType(TypeControleEnum $type): static
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -69,7 +106,94 @@ class Controle
     public function setStatut(StatutNoteEnum $statut): static
     {
         $this->statut = $statut;
+        return $this;
+    }
 
+    public function getDateControle(): ?\DateTimeInterface
+    {
+        return $this->dateControle;
+    }
+
+    public function setDateControle(\DateTimeInterface $dateControle): static
+    {
+        $this->dateControle = $dateControle;
+        return $this;
+    }
+
+    public function getDuree(): ?int
+    {
+        return $this->duree;
+    }
+
+    public function setDuree(?int $duree): static
+    {
+        $this->duree = $duree;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getFichier(): ?string
+    {
+        return $this->fichier;
+    }
+
+    public function setFichier(?string $fichier): static
+    {
+        $this->fichier = $fichier;
+        return $this;
+    }
+
+    public function getCorrige(): ?string
+    {
+        return $this->corrige;
+    }
+
+    public function setCorrige(?string $corrige): static
+    {
+        $this->corrige = $corrige;
+        return $this;
+    }
+
+    public function isPublie(): ?bool
+    {
+        return $this->publie;
+    }
+
+    public function setPublie(?bool $publie): static
+    {
+        $this->publie = $publie;
+        return $this;
+    }
+
+    public function getSalle(): ?string
+    {
+        return $this->salle;
+    }
+
+    public function setSalle(?string $salle): static
+    {
+        $this->salle = $salle;
+        return $this;
+    }
+
+    public function getSemestre(): ?string
+    {
+        return $this->semestre;
+    }
+
+    public function setSemestre(?string $semestre): static
+    {
+        $this->semestre = $semestre;
         return $this;
     }
 
@@ -81,7 +205,6 @@ class Controle
     public function setEnseignementId(?Enseignement $enseignement_id): static
     {
         $this->enseignement_id = $enseignement_id;
-
         return $this;
     }
 
@@ -93,12 +216,11 @@ class Controle
     public function setEtudiantId(?Etudiant $etudiant_id): static
     {
         $this->etudiant_id = $etudiant_id;
-
         return $this;
     }
 
     public function __toString(): string
     {
-        return $this->type?->value . ' - ' . ($this->enseignement_id?->getNom() ?? '');
+        return $this->titre;
     }
 }
