@@ -1,5 +1,4 @@
 
-```php
 <?php
 
 namespace App\Entity;
@@ -225,5 +224,3 @@ class Controle
         return $this->titre;
     }
 }
-
-```
